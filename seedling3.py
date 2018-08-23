@@ -6,13 +6,13 @@ import tensorflow as tf
 from keras.preprocessing import image
 from keras.applications import xception
 from keras.layers import Dense, GlobalAveragePooling2D, Activation
-from keras.models import Model, Sequential
+from keras.models import Model, Sequential, load_model
 
 
 data_dir = './input/plant-seedlings-classification/'
 train_dir = os.path.join(data_dir, 'train')
 val_dir = os.path.join(data_dir, 'val')
-output = './output/out'
+output = './output/out1'
 
 preprocess_input = xception.preprocess_input
 batch_size = 64
@@ -92,7 +92,9 @@ model.add(Activation("softmax"))
 
 model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=["accuracy"])
 
-history = model.fit(x=train_x_bf, y=train_y_hot, batch_size=32, epochs=10)
+# model = load_model(output)
+
+history = model.fit(x=train_x_bf, y=train_y_hot, batch_size=32, epochs=13)
 
 model.save(output)
 
@@ -109,6 +111,8 @@ pred = model.evaluate(val_x_bf, val_y_hot)
 
 print("Loss = " + str(pred[0]))
 print("Accuracy = " + str(pred[1]))
+
+print(history.history)
 
 
 def new_last_layer(base_model, nb_class):
